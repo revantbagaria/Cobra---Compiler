@@ -1,0 +1,15 @@
+main:
+	x = 7
+	y = 3
+	z = get
+	z = z
+	z = z * 2
+	za = z
+	za = za * 2
+	za = za
+	za = za * 2
+	za = za + z
+	zb = za + x
+	put za
+	put zb
+	stop

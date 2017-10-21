@@ -1,0 +1,16 @@
+main:
+	x = 7
+	y = 3
+	ten = 10
+	za = ten
+	za = za * 2
+	zb = za + x
+	put za
+	sum = za + zb
+	tmp1 = x + y
+	put tmp1
+	tmp2 = y
+	tmp2 = tmp2 * 2
+	put tmp2
+	put sum
+	stop

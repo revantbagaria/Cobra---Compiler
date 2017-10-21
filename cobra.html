@@ -1,0 +1,251 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CS@Reed">
+  <meta name="author" content="jimfix">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="cache-control" content="max-age=0" />
+  <meta http-equiv="cache-control" content="no-cache" />
+  <meta http-equiv="expires" content="0" />
+  <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+  <meta http-equiv="pragma" content="no-cache" />
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">  
+  <style>
+#cs-nav {
+  background: whitesmoke;
+  border-bottom: 0.5rem solid #a80e16; }
+
+html, body {
+  background: white;
+  font-family: "Trebuchet MS", Verdana, "Helvetica Neue", Helvetica, Sans-Serif;
+  font-weight: 300; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 300; }
+
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-weight: 300; }
+
+body {
+  padding-top: 10px; }
+
+.panel-group {
+  min-height: 80vh;
+  margin-top: 2rem; }
+
+.flex-panel-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; }
+
+.flex-pagination .pager {
+  width: inherit;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; }
+
+.popover-footer {
+  margin: 0;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  text-align: right;
+  border-top: 1px solid #E5E5E5; }
+
+.popover-footer .btn + .btn {
+  margin-left: 5px; }
+
+.popover {
+  max-width: 100%; }
+  </style>
+
+</head>
+
+<body>
+<center>
+<table width=640>
+<tr>
+<td width=20>
+&nbsp;
+</td>
+<td>
+<section class="ps-info">    
+<h2 id="math-221-fall-2016">MATH 221 FALL 2016</h2>
+<h1 id="the-cobra-compiler">the Cobra compiler</h1>
+<p><em>A compiler for a Python-like language (Cobra) written in Standard ML</em></p>
+<p><strong>Due</strong>: November 16th, 2016</p>
+<p>This SML code implements a recursive descent parser for programs written in a Python-like language called Cobra. Like most Python programs, Cobra programs consist of a series of function definitions followed by lines of code at the bottom (the Cobra &quot;script&quot;) that do the work of the program. The language has loops, conditionals, assignment statements, <code>print</code> and <code>input</code>, etc.</p>
+<p>Here is the full grammar for the language: <prgm> ::= <defs> <stmt></p>
+<pre><code>&lt;defs&gt; ::= &lt;defn&gt;
+         | &lt;defn&gt; &lt;defs&gt;
+
+&lt;defn&gt; ::= def &lt;name&gt; ( &lt;name&gt;, ..., &lt;name&gt; ) : &lt;stmt&gt;
+
+&lt;stmt&gt; ::= &lt;name&gt; = &lt;expn&gt;
+         | &lt;name&gt; ( &lt;expn&gt;, ... , &lt;expn&gt; )
+         | print ( &lt;expn&gt; )
+         | while &lt;cond&gt;: &lt;stmt&gt;
+         | if &lt;cond&gt;: &lt;stmt&gt; else: &lt;stmt&gt;
+         | return &lt;expn&gt;
+         | pass
+         | begin &lt;block&gt; end
+
+&lt;blck&gt; ::= &lt;stmt&gt;
+         | &lt;stmt&gt; &lt;blck&gt;
+
+&lt;cond&gt; ::= &lt;expn&gt; &lt; &lt;expn&gt;
+&lt;cond&gt; ::= &lt;expn&gt; == &lt;expn&gt;
+
+&lt;expn&gt; ::= &lt;sum&gt;
+
+&lt;sum&gt; ::= &lt;product&gt; &lt;rest-of-sum&gt;
+&lt;rest-of-sum&gt; ::= .
+                | + &lt;product&gt; &lt;rest-of-sum&gt;
+                | - &lt;product&gt; &lt;rest-of-sum&gt;
+
+&lt;product&gt; ::= &lt;term&gt; &lt;product-terms&gt;
+&lt;rest-of-product&gt; ::= .
+                    | * &lt;term&gt; &lt;rest-of-product&gt;
+                    | // &lt;term&gt; &lt;rest-of-product&gt;
+                    | % &lt;term&gt; &lt;rest-of-product&gt;
+
+&lt;term&gt; ::= &lt;number&gt;
+         | &lt;name&gt;
+         | &lt;name&gt; ( &lt;expn&gt;, ... , &lt;expn&gt; )
+         | input ( )
+         | ( &lt;expn&gt; )</code></pre>
+<p>Note that identation and spacing is not important in Cobra the way it is in Python. In Python, you use tabbed indentation to indicate which blocks of code are associated with which constructs (<code>def</code>, <code>while</code>, <code>if</code>, etc.). Instead, a Cobra programmer uses a <code>begin ... end</code> block in function definitions, <code>while</code> loops, and <code>if</code> statements when those constructs need to run several lines of code. For example, like so</p>
+<pre><code>  def factorial(n):
+  begin
+    i = 1
+    x = 1
+    while i &lt;= n:
+    begin
+      x = xi
+      i = i + 1
+    end
+    return x
+  end</code></pre>
+<p>You'll find several Cobra example programs (all ending with <code>.cob</code>) in this folder. Take a look at them to get a better sense of Cobra syntax.</p>
+<p>The SML code defines a function:</p>
+<pre><code>parse_source: string -&gt; prgm</code></pre>
+<p>which takes the name of a Cobra source file, opens it, converts it to a sequence of tokens, consumes that sequence, and then returns a syntax tree representing the program. The tokens are printed as they are consumed to help you debug any syntax errors in your Cobra programs.</p>
+<p>You'll want to take a look at the <code>datatype</code> declaration defining <code>prgm</code>, <code>stmt</code>, <code>expn</code>, etc. This collection of datatypes define the structure of syntax trees that we use to represent Cobra programs.</p>
+<p>The <code>parse_source</code> function relies on several helper parsing functions:</p>
+<pre><code>  parse_prgm : tokens -&gt; prgm
+  parse_stmt : tokens -&gt; stmt
+  parse_blck : tokens -&gt; stmt list
+  parse_expn : tokens -&gt; expn</code></pre>
+<p>These each consume a portion of the tokens at that front of that sequence when those tokens conform to the associated grammar rule. They each raise a <code>SyntaxError</code> exception if the tokens don't follow the expected syntax.</p>
+<p>Please note: they are not all complete! I've left the job of parsing <code>while</code> and <code>if</code> statements to you. These are supposed to be parsed within <code>parse_stmt</code>. (See the &quot;ASSIGNMENT&quot; section below, under Exercise 1).</p>
+<p>The code also defines a compiler for Cobra programs. This will inspect a source file, parse it, then convert its syntax tree into a sequence of machine instructions.<br />We do so by an intermediate step. There is a <code>compile</code> function that takes an expression tree (a term of type <code>prgm</code>) and converts it to a list of <code>ir</code> terms. That is to say, <code>compile</code> has the type signature</p>
+<pre><code>compile : prgm -&gt; ir list</code></pre>
+<p>We define a <code>datatype ir</code> which defines a collection of machine instructions as terms. An example might be something like</p>
+<pre><code>(SUB (&quot;x&quot;,&quot;y&quot;,&quot;z&quot;))</code></pre>
+<p>which represents an instruction that takes the values stored in registers named <code>y</code> and <code>z</code>, subtracts them, and then puts the result into a register named <code>x</code>. Another example is</p>
+<pre><code>(GOTOIF (&quot;x&quot;,LT0,&quot;end_of_loop&quot;))</code></pre>
+<p>which represents an instruction that checks the value stored in a register named <code>x</code>, sees if it is negative, and then jumps to an instruction labeled as <code>end_of_loop</code>.</p>
+<p>What this means is that our compiler, rather than directly spitting out the code of some machine language program, instead uses a dtat structure of type <code>ir list</code> (a list of these <code>ir</code> terms) as an &quot;intermediate representation&quot; or &quot;IR&quot; for the compiled code. Once in this form (because we have been careful in our definition of <code>ir</code>) that list can be easily converted into machine instructions (for a &quot;target&quot; machine like a Ha75 computer, or an Intel x86 processor,etc).</p>
+<p>Thus, what you'll see is the definition of a function</p>
+<pre><code>compile_source: string -&gt; ir list</code></pre>
+<p>which takes a file name of a Cobra script and gives back a list of these instruction terms. You can type, for example,</p>
+<pre><code>compile_source &quot;test2.cob&quot;;</code></pre>
+<p>after loading the file <code>cobra.sml</code> into SML. It will then spit back a list of <code>ir</code> terms, with an interaction like</p>
+<pre><code>- compile_source &quot;test5.cob&quot;;
+val it =
+  [LABEL &quot;main&quot;,SET (&quot;tmp1&quot;,10),SET_ARG (1,&quot;tmp1&quot;),CALL &quot;sqr&quot;,SET (&quot;tmp2&quot;,10),
+   SET_ARG (1,&quot;tmp2&quot;),CALL &quot;succ&quot;,SET (&quot;main0&quot;,0),SET_RET &quot;main0&quot;,RET,
+   LABEL &quot;succ&quot;,GET_ARG (1,&quot;x&quot;),SET (&quot;y&quot;,1),ADD (&quot;tmp3&quot;,&quot;x&quot;,&quot;y&quot;),
+   SET_RET &quot;tmp3&quot;,RET,LABEL &quot;sqr&quot;,GET_ARG (1,&quot;x&quot;),MUL (&quot;tmp4&quot;,&quot;x&quot;,&quot;x&quot;),
+   SET_RET &quot;tmp4&quot;,RET] : ir list</code></pre>
+<p>If you look carefully at this generated list, it corresponds to a &quot;pseudo-assembly&quot; of the Cobra program, including line labels, and individual machine instructions---all terms from the datatype <code>ir</code>.</p>
+<p>To keep things simple, we don't worry about using real register names in the code that we generate. Instead, we let our compiler make up any names that it likes, ones that are convenient for compilation. The compiler will makes up register names and label names on the fly. We imagine that the conversion of the <code>ir</code> terms into actual machine code will also involve an additional &quot;register allocation&quot; stage, replacing the made-up names with the actual registers of the machine we are programming with Cobra code. We've skipped this stage and instead keep the made-up register names like <code>x</code>, <code>tmp3</code>, etc.</p>
+<p>The compiler code, as is, relies on five functions:</p>
+<pre><code>gen_prgm : prgm -&gt; ir list
+gen_defn : defn -&gt; ir list
+gen_blck : (stmt list) -&gt; ir list
+gen_stmt : stmt -&gt; ir list
+gen_expn : string -&gt; expn -&gt; ir list</code></pre>
+<p>which each generate a sequence of machine instruction terms that correspond to the syntax tree they are given, either the whole program, a function definition, a block of statements (just a <code>stmt list</code>), a statement, or an expression. Note the different form of the signature for the <code>gen_expn</code> function. It takes <em>two</em> arguments, a register name (a <code>string</code>) along with an expression tree (an <code>expn</code>). It gives back machine code that ultimately places the result of its expression into the register named by the string of the first argument.</p>
+<p>Two of the functions, namely <code>gen_stmt</code> and <code>gen_expn</code>, are incomplete. Right now, <code>gen_stmt</code> fails to properly compile a WHILE statement. And <code>gen_expn</code> fails to completely compile addition and subtraction trees (<code>PLUS</code> and <code>MINUS</code> terms of type <code>expn</code>). You will fix these problems in Exercises 3 and 2 below.</p>
+<p>Finally, a remark on how all this is put together. The code, as provided, can compile lots of different Cobra programs---just not ones with <code>while</code> and <code>if</code> statements, or compilcated additions and subtractions---into runnable Ha75 code(!). I've written a modified Ha75 simulator as a Python program <code>pseudoHa75.py</code> that you can use to run your compiled <code>.cob</code> programs. To do this, you need only run a working <code>cobra.sml</code> in SML with an additional <code>.cob</code> filename in the argument to <code>sml</code>, like so:</p>
+<pre><code>sml cobra.sml test4.cob</code></pre>
+<p>This will run the Cobra compiler on the given Cobra program and produce a file named <code>test4.pha</code>. This code will be made up of Ha75 pseudoassembly (one that uses all sorts of names for registers, like <code>x</code> and <code>tmp5</code>). If you then run the command</p>
+<pre><code>python3 pseudoHa75.py test4.pha</code></pre>
+<p>you will see that code run!</p>
+<p>There are limits right now to what will compile. If a program uses <code>*</code>, <code>//</code>, or <code>%</code> then the compiler will produce intermediate code that includes &quot;library&quot; Cobra functions that compute products, quotients, and remainders with loops and <code>if</code> statements (see the file <code>lib.cobl</code>). Since the compiler isn't set up yet to parse <code>if</code> and <code>while</code> these kind of Cobra programs will fail to compile, raising an <code>Unimplemented</code> exception.</p>
+<hr />
+<h1 id="assignment"><strong>ASSIGNMENT</strong></h1>
+<h2 id="exercise-1-parsing">Exercise 1: parsing</h2>
+<p>Complete <code>parse_stmt</code> so that it parses <code>if-else</code> statements and <code>while</code> statements. You'll probably want to add a helper function <code>parse_cond</code> that parses the condition that is used by these two conditional statement types. You can test it by running functions like <code>parse</code>, which parses a source code string directly, and gives back a tree. Your tests can be source code strings like</p>
+<pre><code>&quot;begin i=10 if i&lt;11: print(1) else: print(0) end&quot;</code></pre>
+<p>which corresponds to the more carefully formatted Cobra program</p>
+<pre><code>begin 
+  i=10 
+  if i&lt;11: 
+    print(1) 
+  else: 
+    print(0) 
+end</code></pre>
+<p>The resulting parse should produce a syntax tree with no function definitions, just a list of statements terms form that script.</p>
+<p>Once you feel like your additions are working, then test it with made-up <code>.cob</code> programs. Come up with a variety of test programs, and make sure that <code>parse_source</code> generates the correct tree for each of them.</p>
+<p>Be thoughtful with your tests. You will be graded by the kind of test programs you write.</p>
+<h2 id="exercise-2-compiling-expressions">Exercise 2: compiling expressions</h2>
+<p>The <code>gen_expn</code> function takes two arguments---an expression term along with the name of a &quot;target&quot; register. It should produce a series of machine instructions (each an <code>ir</code> term) ending with an instruction that assigns a computed result to the target register.</p>
+<p>For example, if the expression parsed is (3+4) - (5+6) it could produce something like</p>
+<pre><code>[SET(&quot;tmp100&quot;,3),
+ SET(&quot;tmp101&quot;,4),
+ ADD(&quot;tmp102&quot;,&quot;tmp100&quot;,&quot;tmp101&quot;),
+ SET(&quot;tmp103&quot;,5),
+ SET(&quot;tmp104&quot;,6),
+ ADD(&quot;tmp105&quot;,&quot;tmp103&quot;,&quot;tmp103&quot;),
+ SUB(&quot;target&quot;,&quot;tmp102&quot;,&quot;tmp105&quot;)]</code></pre>
+<p>when <code>gen_expn</code> is given <code>&quot;target&quot;</code> as the first argument and</p>
+<pre><code>(MINUS(PLUS(NUM 3,NUM 4),PLUS(NUM 5,NUM 6)))</code></pre>
+<p>as the second argument.</p>
+<p>Right now, the <code>gen_expn</code> function only works for integer constants, lookups of variables' values, function calls, and products and divisions. Note that multiplication and division gets converted to shifts <code>MUL2</code> and <code>DIV2</code> in the case where the second argument is a <code>NUM 2</code>. It gets converted into function calls to &quot;mul&quot;, &quot;div&quot;, &quot;mod&quot; which are defined in the library source code <code>lib.cobl</code> also in this project folder.</p>
+<p>The <code>gen_expn</code> code does not work fully with sums and differences. Your job is to complete that code. Just to be suggestive, I've worked out the simple cases where we need to generate the <code>ir</code> term for a sum or a difference of two variable <code>LOOKUP</code> terms. Those are as simple as issuing the correct <code>ADD</code> or <code>SUB</code> instruction term from the <code>ir</code> datatype.</p>
+<p>For more general sums and differences, where you have two expression subtrees <code>e1</code> and <code>e2</code>, you'll need to complete the code so that it generates two new register names (see below), recursively call <code>gen_expn</code> twice to build the <code>ir</code> lists whose code evaluates <code>e1</code> and <code>e2</code>, placing their results into those two registers, and then does a final <code>ADD</code> or <code>SUB</code> of those two registers' values into the specified register <code>x</code>.</p>
+<p>To do this work, your code will need to make up register names to use as temporaries that serve as places where intermediate calculations' results are placed. To generate these names, you can use the expression:</p>
+<pre><code>(gen_tmp ())</code></pre>
+<p>and you'll get back a new string like &quot;tmp101&quot;.</p>
+<p>Again, generate <code>.cob</code> programs that test your compiler. Make sure that the <code>ir</code> sequences that <code>compile_source</code> produces are correct.</p>
+<h2 id="exercise-3-compiling-statements">Exercise 3: compiling statements</h2>
+<p>I've written the <code>gen_stmt</code> code so that it handles all the statement types, including <code>if</code> statements, but not including the work for <code>while</code> statements. Your job is to complete <code>gen_stmt</code> so that it handles <code>WHILE</code> terms.</p>
+<p>To do this work, your code will need use the <code>GOTO</code> pseudo-assembly instructions defined as <code>ir</code> to have the code jump to, or conditionally jump to, another part of the code. There is a <code>LABEL</code> instruction whose string can be the target of these jump instructions. You'll need to generate novel label names as you generate this code. If you use the expression</p>
+<pre><code>(gen_lbl &quot;skip&quot;)</code></pre>
+<p>you'll get back a novel string like &quot;skip35&quot;, and if you use</p>
+<pre><code>(gen_lbl &quot;loop&quot;)</code></pre>
+<p>you'll get back a novel string like &quot;loop415&quot;.</p>
+<p>Both <code>IF</code> and <code>WHILE</code> rely on the parsed <code>cond</code> expression. That term is either a <code>LESS</code> term or an <code>EQUAL</code> term. These can then be translated, when handling <code>IF</code> and <code>WHILE</code>, into <code>GOTOIF</code> terms with one of the register- checking <code>ir</code> conditions. If, for example, you want to jump to the label &quot;skip237&quot; when a register value &quot;tmp678&quot; is not equal to zero, you would use the instruction</p>
+<pre><code>(GOTOIF (&quot;skip237&quot;, NEQ0, &quot;tmp678&quot;))</code></pre>
+<p>Take a look at how I convert an <code>if</code> statment into a series of <code>ir</code> lists. I generate two labels, one to skip ahead to the <code>then</code> code (skipping the <code>else</code> code) when the condition holds, and one to skip past the <code>then</code> code at the end of the <code>else</code> code. Thus I generate an <code>ir</code> list that corresponds to the pseudo-Ha code:</p>
+<pre><code>  # evaluate the left side of the condition
+  ...
+  x1 = ...the code from gen_expn...
+  # evaluate the right side of the condition
+  ...
+  x2 = ...the code from gen_expn...
+  x = x1 - x2
+  if x &lt; 0 go to lt
+  ...the code for the else...
+  go to la
+lt:
+  ...the code for the then...
+la:</code></pre>
+<p>You will need to do something similar to compile all the subtree parts of a <code>WHILE</code> term, one for the <code>LESS</code> condition, and one for the <code>EQUAL</code> condition.</p>
+<hr />
+<p>Having done all the above, write a bunch of Cobra programs that convince yourself, and me, that your compiler works! Generate their <code>.pha</code> files, and run them with <code>pseudoHa75.py</code>.</p>
+</section>
+</td>
+<td width=20>
+&nbsp;
+</td>
+</tr>
+</table>
+</center>
+</body>
+</html>

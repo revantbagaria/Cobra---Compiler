@@ -1,0 +1,23 @@
+main:
+	x = 3
+	y = 7
+	z = 3
+	tmp1 = x
+	tmp2 = y
+	tmp3 = tmp1 - tmp2
+	if tmp3 < 0 go to then1
+	put y
+	go to after2
+then1:
+	put x
+after2:
+	tmp4 = x
+	tmp5 = z
+	tmp6 = tmp4 - tmp5
+	if tmp6 == 0 go to then3
+	put y
+	go to after4
+then3:
+	put x
+after4:
+	stop

@@ -1,0 +1,3 @@
+main:
+	x = 7
+	stop

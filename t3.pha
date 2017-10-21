@@ -1,0 +1,20 @@
+main:
+	tmp5 = 1
+	tmp6 = 4
+	tmp3 = tmp5 + tmp6
+	tmp4 = 2
+	tmp1 = tmp3 - tmp4
+	tmp2 = 5
+	x = tmp1 + tmp2
+	tmp9 = 5
+	tmp10 = 4
+	tmp7 = tmp9 - tmp10
+	tmp8 = 3
+	y = tmp7 + tmp8
+	tmp11 = x
+	tmp13 = y
+	tmp14 = 3
+	tmp12 = tmp13 + tmp14
+	w = tmp11 + tmp12
+	put w
+	stop

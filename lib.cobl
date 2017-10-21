@@ -1,0 +1,68 @@
+
+def mul(a,b):
+begin
+  p = 0
+  while 0 < a:
+  begin
+    c = a // 2
+    if c * 2 == a:
+      pass
+    else:
+      p = p + b
+    a = c
+    b = b * 2
+  end
+  return p
+end
+
+def div(a,b):
+begin
+  one = 1
+  q = 0
+  if b < 0:
+  begin
+    a = r0 - a
+    b = r0 - b
+  end
+  else:
+    pass
+  while a < 0:
+  begin
+    a = a + b
+    q = q - one
+  end
+  while b < a:
+  begin
+    a = a - b
+    q = q + one
+  end
+  if a == b:
+  begin
+    a = a - b
+    q = q + one
+  end
+  else:
+    pass
+  return q
+end
+
+def mod(a,b):
+begin
+  if b < 0:
+  begin
+    a = r0 - a
+    b = r0 - b
+  end
+  else:
+    pass
+  while a < 0:
+    a = a + b
+  while b < a:
+    a = a - b
+  if a == b:
+    a = a - b
+  else:
+    pass
+  return a
+end
+
